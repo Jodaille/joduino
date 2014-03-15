@@ -5,13 +5,12 @@
 * answer values of DHT11 sensor
 *
 * 3 Wires:
-
-|Arduino | Raspberry |
-|:------:|:---------:|
-|GND     | GND|
-|A4      | 2 (front to 5V)|
-|A5      | 3 (front to GND)|
-
+*
+* Arduino - Raspberry
+* GND     - GND
+* A4      - 2 (front to 5V)
+* A5      - 3 (front to GND)
+*
 */
 
 #include <Wire.h>
@@ -26,9 +25,11 @@ dht11 DHT11;
 * dataReceived is to_send number in python script
 */
 int dataReceived = 0;
+int pinYellow = 8;
+int pinRed = 7;
 
 // char cannot contain space
-char msg[255] = "some_text_without_space";
+char msg[255] = "{\"temperature\":\"\",\"humidity\":\"\",\"msg\":\"start\"}";
 
 int index = 0;
 
@@ -49,7 +50,10 @@ void setup() {
     Serial.println();
     delay(2000);
     int chk = DHT11.read(DHT11PIN);
-    
+
+    pinMode(pinYellow, OUTPUT);
+    pinMode(pinRed, OUTPUT);
+
     Serial.println(msg);
 }
 
@@ -64,9 +68,30 @@ void receiveData(int byteCount){
         dataReceived = Wire.read();
     }
     delay(500);
-    
+ 
+      int m = int(dataReceived);
 
-    sprintf(msg,"{\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\"}",DHT11.temperature,DHT11.humidity, dataReceived);
+      if(m==11)
+      {
+        digitalWrite(pinRed, HIGH);
+        //m=15;
+      }
+      if(m==12)
+      {
+        digitalWrite(pinRed, LOW);
+        //m=15;
+      }
+      if(m==14)
+      {
+        digitalWrite(pinYellow, HIGH);
+        //m=15;
+      }
+      if(m==15)
+      {
+        digitalWrite(pinYellow, LOW);
+        //m=15;
+      }
+     sprintf(msg,"{\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\"}",DHT11.temperature,DHT11.humidity, m);
 
     Serial.println(msg);
 }
