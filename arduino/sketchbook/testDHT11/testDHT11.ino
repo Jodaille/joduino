@@ -1,16 +1,9 @@
 /**
-* Raspberry as I2C MASTER (3.3V)
-* send a number via I2C
-* Arduino as I2C Slave (5V)
-* answer values of DHT11 sensor
-*
-* 3 Wires:
-*
-* Arduino - Raspberry
-* GND     - GND
-* A4      - 2 (front to 5V)
-* A5      - 3 (front to GND)
-*
+* Arduino echo values of DHT11 sensor
+* allow to test baudrate and DHT11 values
+* before use of I2C communication
+* @author Jodaille
+* @licence GPLv3
 */
 
 #include <Wire.h>
@@ -33,26 +26,27 @@ int index = 0;
 
 void setup() {
 
-    Serial.begin(9600);//115200 9600
-    /**
-    * change baudrate on RaspberryPi :
-    * echo 115200 > /sys/module/i2c_bcm2708/parameters/baudrate
-    */
-    Serial.println("DHT11 TEST PROGRAM ");
-    Serial.print("LIBRARY VERSION: ");
-    Serial.println(DHT11LIB_VERSION);
-    Serial.println();
-    delay(2000);
-    
-    //Serial.println(msg);
+	Serial.begin(9600);
+	Serial.println("DHT11 TEST PROGRAM ");
+	Serial.print("LIBRARY VERSION: ");
+	Serial.println(DHT11LIB_VERSION);
+	Serial.println();
+	
+	// give time to init sensor
+	delay(2000); // 2s may be a bit long
+
 }
 
 void loop() {
-    // No need delay
+
     printData();
     delay(2000);
 }
 
+/**
+* Substitute datas values to msg variable
+* and then print msg
+*/
 void printData(){
 
     int chk = DHT11.read(DHT11PIN);

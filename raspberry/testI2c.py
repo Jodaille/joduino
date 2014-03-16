@@ -40,9 +40,9 @@ for o, a in myopts:
         print("Usage: %s -m message -a action" % sys.argv[0])
  
 # Display input and output file name passed as the args
-print ("Message : %s and action: %s" % (to_send,to_act) )
+# print ("Message : %s and action: %s" % (to_send,to_act) )
 
-print "Sending number: ", to_send, " to arduino"
+# print "Sending number: ", to_send, " to arduino"
 
 bus.write_byte(arduino_slave_address, to_send)
 
