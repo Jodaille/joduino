@@ -1,0 +1,49 @@
+<div class="jumbotron">
+    <h1><?php echo sprintf($this->translate('Welcome to %sJoduino%s'), '<span class="zf-green">', '</span>') ?></h1>
+    
+    <p><a class="btn btn-success btn-lg" href="https://github.com/Jodaille/joduino" target="_blank"><?php echo $this->translate('Fork Joduino on GitHub') ?> &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?php echo $this->translate('Environment') ?></h3>
+            </div>
+            <div class="panel-body">
+                <p><ul>
+			<li>T°C : <?php echo $this->data->temperature ?></li>
+			<li>H%  : <?php echo $this->data->humidity ?></li>
+			</ul></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?php echo $this->translate('Quick Action') ?></h3>
+            </div>
+            <div class="panel-body">
+		<form name="arduino" method="get" >
+			<label for="foam"><?php echo $this->translate('Foam') ?></label>
+			<input type="checkbox" name="foam" id="foam" value="foam_on" <?php if($this->foam) echo 'checked="checked"'; ?> /><br />
+			<label for="fan"><?php echo $this->translate('Fan') ?></label>
+			<input type="checkbox" name="fan" id="fan" value="fan_on" <?php if($this->fan) echo 'checked="checked"'; ?> /><br />
+			<input type="submit" class="btn btn-success pull-right" value="<?php echo $this->translate('Submit') ?>" >
+		</form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?php echo $this->translate('History') ?></h3>
+            </div>
+            <div class="panel-body">
+                <p>Not yet available</p>
+                
+            </div>
+        </div>
+    </div>
+</div>
