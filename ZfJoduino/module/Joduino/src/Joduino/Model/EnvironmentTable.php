@@ -2,7 +2,7 @@
 namespace Joduino\Model;
 
  use Zend\Db\TableGateway\TableGateway;
-
+ use Zend\Db\Sql\Select;
  class EnvironmentTable
  {
      protected $tableGateway;
@@ -17,6 +17,18 @@ namespace Joduino\Model;
          $resultSet = $this->tableGateway->select();
          return $resultSet;
      }
+
+     public function getHistory($nbelt = 20)
+     {
+	$resultSet = $this->tableGateway->select(
+		function (Select $select) {
+     			//$select->where->like('name', 'Brit%');
+     			$select->order('msgdate DESC')->limit(20);
+			}
+		);
+     	return $resultSet;
+     }
+
 
      public function getEnvironment($id)
      {
@@ -37,7 +49,7 @@ namespace Joduino\Model;
 		'temperature' => $environment->temperature,
 		'photoresistance' => $environment->photoresistance,
 		'msg' => $environment->msg,
-		'msgdate' => $environment->date,
+		'msgdate' => $environment->msgdate,
          );
 
          $id = (int) $environment->id;

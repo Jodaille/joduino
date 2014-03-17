@@ -22,7 +22,7 @@ class Environment
 	public $temperature;
 	public $photoresistance;
 	public $msg;
-	public $date;
+	public $msgdate;
 
 	public function __construct($sensor_id = false)
 	{
@@ -37,8 +37,8 @@ class Environment
 		$this->humidity     	= (!empty($data['humidity'])) ? $data['humidity'] : null;
 		$this->temperature 	= (!empty($data['temperature'])) ? $data['temperature'] : null;
 		$this->photoresistance 	= (!empty($data['photoresistance'])) ? $data['photoresistance'] : null;
-		$this->msg 		= (!empty($data['msg'])) ? $data['date'] : msg;
-		$this->date 		= (!empty($data['date'])) ? $data['date'] : null;
+		$this->msg 		= (!empty($data['msg'])) ? $data['msg'] : null;
+		$this->msgdate 		= (!empty($data['msgdate'])) ? $data['msgdate'] : null;
 	}
 
 	public function setJson($oJsonDecode)
@@ -49,7 +49,7 @@ class Environment
 		$this->temperature 	= (!empty($oJsonDecode->temperature)) ? $oJsonDecode->temperature : null;
 		$this->photoresistance 	= (!empty($oJsonDecode->l)) ? $oJsonDecode->l : null;
 		$this->msg	 	= (!empty($oJsonDecode->msg)) ? $oJsonDecode->msg : null;
-		$this->date 		= $this->_getDate();
+		$this->msgdate 		= $this->_getDate();
 
 	}
 	private function _getDate()

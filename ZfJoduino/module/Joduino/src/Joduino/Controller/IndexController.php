@@ -17,6 +17,9 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
 	$arduinoIcc = $this->getServiceLocator()->get('Joduino\Model\ArduinoIcc');
+	$environmentTable = $this->getServiceLocator()->get('Joduino\Model\EnvironmentTable');
+	$history = $environmentTable->getHistory();
+
 	$foam 	= $this->getRequest()->getQuery('foam');
 	$fan 	= $this->getRequest()->getQuery('fan');
 
@@ -38,7 +41,12 @@ class IndexController extends AbstractActionController
 		$json = $arduinoIcc->sendMsgToArduino(15);
 	}
 
-        return new ViewModel(array('data' => $json, 'fan' => $fan, 'foam' => $foam));
+        return new ViewModel(array(
+			'data' => $json, 
+			'fan' => $fan, 
+			'foam' => $foam,
+			'history' => $history,
+			));
     }
 
 }
