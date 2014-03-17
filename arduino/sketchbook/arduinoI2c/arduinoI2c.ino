@@ -25,12 +25,19 @@ dht11 DHT11;
 * dataReceived is to_send number in python script
 */
 int dataReceived = 0;
+int t;
+int h;
+int l;
+int m;
+int chk;
+
+int pinPhotoresistor = A0;
 int pinYellow = 8;
 int pinRed = 7;
 
 // char cannot contain space
 char msg[255] = "{\"temperature\":\"\",\"humidity\":\"\",\"msg\":\"start\"}";
-
+char debug[255] = "{\"temperature\":\"\",\"humidity\":\"\",\"msg\":\"start\"}";
 int index = 0;
 
 void setup() {
@@ -48,18 +55,38 @@ void setup() {
     Serial.print("LIBRARY VERSION: ");
     Serial.println(DHT11LIB_VERSION);
     Serial.println();
-    delay(2000);
-    int chk = DHT11.read(DHT11PIN);
 
     pinMode(pinYellow, OUTPUT);
     pinMode(pinRed, OUTPUT);
+
 
     Serial.println(msg);
 }
 
 void loop() {
-    // No need delay
 
+  chk = DHT11.read(DHT11PIN);
+  l = analogRead(pinPhotoresistor);
+  switch (chk)
+  {
+    case DHTLIB_OK: 
+                t = int(DHT11.temperature);
+                h = int(DHT11.humidity);
+		break;
+    case DHTLIB_ERROR_CHECKSUM: 
+		m=99;
+                chk = DHT11.read(DHT11PIN);
+		break;
+    case DHTLIB_ERROR_TIMEOUT: 
+		m=98; 
+		break;
+    default: 
+		m=97;
+		break;
+  }
+  sprintf(debug,"{\"l\":\"%i\",\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\"}",l,t,h,m);
+  Serial.println(debug);
+  delay(2000);
 }
 
 void receiveData(int byteCount){
@@ -67,9 +94,8 @@ void receiveData(int byteCount){
     while(Wire.available()) {
         dataReceived = Wire.read();
     }
-    delay(500);
- 
-      int m = int(dataReceived);
+
+      m = int(dataReceived);
 
       if(m==11)
       {
@@ -91,9 +117,9 @@ void receiveData(int byteCount){
         digitalWrite(pinYellow, LOW);
         //m=15;
       }
-     sprintf(msg,"{\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\"}",DHT11.temperature,DHT11.humidity, m);
 
-    Serial.println(msg);
+     sprintf(msg,"{\"l\":\"%i\",\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\"}",l,t,h, m);
+     Serial.println(msg);
 }
 
 void sendData(){
@@ -103,14 +129,6 @@ void sendData(){
     if (index >= 255) {
          index = 0;
     }
-}
-void printData(){
-
-    int chk = DHT11.read(DHT11PIN);
-
-    sprintf(msg,"{\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\"}",DHT11.temperature,DHT11.humidity, dataReceived);
-
-    Serial.println(msg);
 }
 
 /** python script below:
