@@ -1,0 +1,10 @@
+#
+# Call ZfConsole "logenvironment" action every minute 
+# to log environment datas (T,H etc ...)
+
+*/1 * * * * php /home/pi/joduino/ZfJoduino/public/index.php logenvironment
+
+# send IP adress to URL (sometime it's hard to know adress without screen)
+#
+#*/15 * * * * /home/pi/sendIp.sh
+
