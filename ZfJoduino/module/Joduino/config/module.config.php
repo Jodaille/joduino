@@ -110,10 +110,21 @@ return array(
             'ViewJsonStrategy',
         ),
     ),
+// /joduino/cron/data
     // Placeholder for console routes
     'console' => array(
         'router' => array(
             'routes' => array(
+		'log-environment-route' => array(
+		    'type'    => 'simple',       // <- simple route is created by default, we can skip that
+		    'options' => array(
+		        'route'    => 'logenvironment',
+		        'defaults' => array(
+		            'controller' => 'Joduino\Controller\Cron',
+		            'action'     => 'logenvironment'
+		        )
+		    )
+)
             ),
         ),
     ),

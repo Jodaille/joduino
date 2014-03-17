@@ -12,6 +12,7 @@ class ArduinoIcc implements ServiceLocatorAwareInterface
 {
 	protected $service_manager;
 	private $sendIDeuxCcmd;
+	protected $response;
 	
 	public function __construct($service_manager)
 	{
@@ -28,6 +29,12 @@ class ArduinoIcc implements ServiceLocatorAwareInterface
 		$this->sendIDeuxCcmd = $sendIDeuxCcmd;
 	}
 	
+	public function getResponse()
+	{
+		$json = json_decode($this->response);
+		return $json;
+	}
+
 	public function sendMsgToArduino($code, $decode = true)
 	{
 		$json = false;
@@ -35,7 +42,10 @@ class ArduinoIcc implements ServiceLocatorAwareInterface
 		$cmd = $this->sendIDeuxCcmd . ' -m ';
 	
 		exec($cmd . " $code", $output);
+
 		$brutJson = trim(current($output));
+
+		$this->response = $brutJson;
 
 		if($decode)
 			$json = json_decode($brutJson);

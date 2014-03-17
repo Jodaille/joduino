@@ -12,6 +12,11 @@ namespace Joduino;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
+ use Joduino\Model\Environment;
+ use Joduino\Model\EnvironmentTable;
+ use Zend\Db\ResultSet\ResultSet;
+ use Zend\Db\TableGateway\TableGateway;
+
 class Module
 {
     public function onBootstrap(MvcEvent $e)
@@ -42,6 +47,17 @@ class Module
                     $ArduinoIcc->setServiceLocator($sm);
                     return $ArduinoIcc;
                 },
+                 'Joduino\Model\EnvironmentTable' =>  function($sm) {
+                     $tableGateway = $sm->get('EnvironmentTableGateway');
+                     $table = new EnvironmentTable($tableGateway);
+                     return $table;
+                 },
+                 'EnvironmentTableGateway' => function ($sm) {
+                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                     $resultSetPrototype = new ResultSet();
+                     $resultSetPrototype->setArrayObjectPrototype(new Environment());
+                     return new TableGateway('environment', $dbAdapter, null, $resultSetPrototype);
+                 },
             ),
         );
     }
