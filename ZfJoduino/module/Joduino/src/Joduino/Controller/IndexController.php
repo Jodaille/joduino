@@ -16,12 +16,15 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
+	$foam 		= $this->getRequest()->getQuery('foam');
+	$fan 		= $this->getRequest()->getQuery('fan');
+	$histo_nb_elt 	= $this->getRequest()->getQuery('nbelt', 10);
+
 	$arduinoIcc = $this->getServiceLocator()->get('Joduino\Model\ArduinoIcc');
 	$environmentTable = $this->getServiceLocator()->get('Joduino\Model\EnvironmentTable');
-	$history = $environmentTable->getHistory();
 
-	$foam 	= $this->getRequest()->getQuery('foam');
-	$fan 	= $this->getRequest()->getQuery('fan');
+	$history = $environmentTable->getHistory($histo_nb_elt);
+
 
 	if($fan == 'fan_on')
 	{
@@ -46,6 +49,7 @@ class IndexController extends AbstractActionController
 			'fan' => $fan, 
 			'foam' => $foam,
 			'history' => $history,
+			'histo_nb_elt' => $histo_nb_elt,
 			));
     }
 

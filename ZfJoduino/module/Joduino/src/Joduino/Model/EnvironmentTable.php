@@ -21,10 +21,19 @@ namespace Joduino\Model;
      public function getHistory($nbelt = 20)
      {
 	$resultSet = $this->tableGateway->select(
-		function (Select $select) {
-     			//$select->where->like('name', 'Brit%');
-     			$select->order('msgdate DESC')->limit(20);
+		function (Select $select) use ($nbelt) {
+     			$select->where('msgdate >= CURDATE()');
+     			
+     			if($nbelt)
+     			{
+				$nbelt = (int) $nbelt;
+     				$select->order('msgdate DESC')->limit($nbelt);
 			}
+			else
+			{
+				$select->order('msgdate DESC');
+			}
+		}				
 		);
      	return $resultSet;
      }

@@ -54,12 +54,18 @@
                 <h3 class="panel-title"><?php echo $this->translate('History') ?></h3>
             </div>
             <div class="panel-body">
-                <p>Not yet available
-		<table>
-		<tr><td>temperature</td><td>humidity</td><td>msgdate</td></tr>
-                <?php foreach($history as $event): ?>
-			<tr><?php echo '<td>' . $event->temperature . '</td><td>' . $event->humidity . '</td><td>' . $event->msgdate; ?></td></tr>
-                <?php endforeach; ?>
+                <p>
+		<table name="lastDatas"  class="table table-striped">
+			<caption>Last <?php echo $histo_nb_elt ?> data entries</caption>
+			<tr><th>Temperature °C</th><th>Humidity %</th><th>Luminosity /1024</th><th>Msg date</th></tr>
+
+			<?php foreach($history as $event): ?>
+				<tr><?php echo '<td>' . $event->temperature . '</td><td>' 
+				. $event->humidity . '</td><td>' 
+				. $event->photoresistance . '</td><td>' 
+				. $event->msgdate; ?></td></tr>
+			<?php endforeach; ?>
+
                 </table>
 		</p>
                 
