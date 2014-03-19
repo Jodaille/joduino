@@ -115,6 +115,24 @@ return array(
     'console' => array(
         'router' => array(
             'routes' => array(
+                'foam-state' => array(
+                    'options' => array(
+                        'route' => 'foam [--verbose|-v] <state>',
+                        'defaults' => array(
+                            'controller' => 'Joduino\Controller\Cron',
+                            'action' => 'foam',
+                        )
+                    )
+                ),
+                'fan-state' => array(
+                    'options' => array(
+                        'route' => 'fan [--verbose|-v] <state>',
+                        'defaults' => array(
+                            'controller' => 'Joduino\Controller\Cron',
+                            'action' => 'fan',
+                        )
+                    )
+                ),
 		'log-environment-route' => array(
 		    'type'    => 'simple',       // <- simple route is created by default, we can skip that
 		    'options' => array(

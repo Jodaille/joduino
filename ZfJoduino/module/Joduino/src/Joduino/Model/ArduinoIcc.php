@@ -7,13 +7,20 @@ namespace Joduino\Model;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Joduino\Model\Environment;
 
 class ArduinoIcc implements ServiceLocatorAwareInterface
 {
 	protected $service_manager;
 	private $sendIDeuxCcmd;
 	protected $response;
-	
+	protected $environmentTable;
+
+	const FOAM_ON = 14;
+	const FOAM_OFF = 15;
+	const FAN_ON = 11;
+	const FAN_OFF = 12;
+
 	public function __construct($service_manager)
 	{
 		$this->service_manager = $service_manager;
@@ -33,6 +40,55 @@ class ArduinoIcc implements ServiceLocatorAwareInterface
 	{
 		$json = json_decode($this->response);
 		return $json;
+	}
+
+	public function changeFanState($state)
+	{
+		$json = null;
+		if($state)
+		{
+			if($state == 'on' || $state == '1') 
+					$send = self::FAN_ON;
+
+			elseif($state == 'off')
+					$send = self::FAN_OFF;
+
+			else 
+					throw new \Exception('Bad state specified');
+
+			$json = $this->sendMsgToArduino($send, false);
+		}		
+		return $json;
+	}
+
+	public function changeFoamState($state)
+	{
+		$json = null;
+		if($state)
+		{
+			if($state == 'on' || $state == '1') 
+					$send = self::FOAM_ON;
+
+			elseif($state == 'off')
+					$send = self::FOAM_OFF;
+
+			else 
+					throw new \Exception('Bad state specified');
+
+			$json = $this->sendMsgToArduino($send, false);
+		}		
+		return $json;
+	}
+
+	private function _saveResponse($oJson)
+	{
+		$sensor_id = 1;
+	
+		$oEnvironment = new Environment($sensor_id);
+		$oEnvironment->setJson($oJson);
+	
+		$env = $this->getEnvironmentTable()->saveEnvironment($oEnvironment);
+		return $env;
 	}
 
 	public function sendMsgToArduino($code, $decode = true)
@@ -71,16 +127,26 @@ class ArduinoIcc implements ServiceLocatorAwareInterface
 			default:
 	        	break;
 		}
-
+		$this->_saveResponse(json_decode($brutJson));
 		return $json;	
 	}
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->service_manager = $serviceLocator;
-    }
 
-    public function getServiceLocator()
-    {
-        return $this->service_manager;
-    }
+	public function getEnvironmentTable()
+	{
+		if (!$this->environmentTable) {
+			$sm = $this->getServiceLocator();
+			$this->environmentTable = $sm->get('Joduino\Model\EnvironmentTable');
+		}
+	 	return $this->environmentTable;
+	}
+
+	public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+	{
+		$this->service_manager = $serviceLocator;
+	}
+	
+	public function getServiceLocator()
+	{
+		return $this->service_manager;
+    	}
 }

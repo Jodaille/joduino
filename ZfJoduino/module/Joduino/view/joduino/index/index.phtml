@@ -57,13 +57,14 @@
                 <p>
 		<table name="lastDatas"  class="table table-striped">
 			<caption>Last <?php echo $histo_nb_elt ?> data entries</caption>
-			<tr><th>Temperature °C</th><th>Humidity %</th><th>Luminosity /1024</th><th>Msg date</th></tr>
+			<tr><th>Temperature °C</th><th>Humidity %</th><th>Luminosity /1024</th><th>Msg date</th><th>Code</th></tr>
 
 			<?php foreach($history as $event): ?>
-				<tr><?php echo '<td>' . $event->temperature . '</td><td>' 
-				. $event->humidity . '</td><td>' 
-				. $event->photoresistance . '</td><td>' 
-				. $event->msgdate; ?></td></tr>
+				<tr>
+<?php echo '<td>' . $event->temperature . '</td><td>' . $event->humidity . '</td><td>' . $event->photoresistance . '</td><td>' . $event->msgdate .'</td>
+					<td>' 
+					. $event->msg; ?></td>
+				</tr>
 			<?php endforeach; ?>
 
                 </table>

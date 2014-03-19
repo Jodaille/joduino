@@ -12,10 +12,15 @@ namespace Joduino;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
- use Joduino\Model\Environment;
- use Joduino\Model\EnvironmentTable;
- use Zend\Db\ResultSet\ResultSet;
- use Zend\Db\TableGateway\TableGateway;
+use Joduino\Model\Environment;
+use Joduino\Model\EnvironmentTable;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
+
+/** CLI part */
+use Zend\ModuleManager\Feature\ConsoleBannerProviderInterface;
+use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
+use Zend\Console\Adapter\AdapterInterface as Console;
 
 class Module
 {
@@ -65,6 +70,25 @@ class Module
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
+    }
+
+    /**
+     * This method is defined in ConsoleBannerProviderInterface
+     */
+    public function getConsoleBanner(Console $console)
+    {
+        return 'Joduino';
+    }
+
+    /**
+     * This method is defined in ConsoleUsageProviderInterface
+     */
+    public function getConsoleUsage(Console $console)
+    {
+        return array(
+            'foam [--verbose|-v] <state>' => 'Change foam state.',
+            'fan [--verbose|-v] <state>' => 'Change fan state.',
+        );
     }
 
     public function getAutoloaderConfig()
