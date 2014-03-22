@@ -1,0 +1,16 @@
+{
+    "name": "Jodaille/joduino",
+    "description": "ZF2 module interface for joduino (based on ZF2 Skeleton)",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "joduino",
+        "zf2",
+        "arduino",
+        "I2C",
+    ],
+    "homepage": "https://github.com/Jodaille/joduino",
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.3.*"
+    }
+}
