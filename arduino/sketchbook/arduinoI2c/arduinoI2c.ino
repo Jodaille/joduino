@@ -36,8 +36,8 @@ int pinYellow = 8;
 int pinRed = 7;
 
 // char cannot contain space
-char msg[255] = "{\"temperature\":\"\",\"humidity\":\"\",\"msg\":\"start\"}";
-char debug[255] = "{\"temperature\":\"\",\"humidity\":\"\",\"msg\":\"start\"}";
+char msg[100] = "{\"l\":\"\",\"temperature\":\"\",\"humidity\":\"\",\"msg\":\"start\"}";
+char debug[100] = "{\"l\":\"\",\"temperature\":\"\",\"humidity\":\"\",\"msg\":\"start\"}";
 int index = 0;
 
 void setup() {
@@ -60,13 +60,16 @@ void setup() {
     pinMode(pinRed, OUTPUT);
 
 
-    Serial.println(msg);
+    //Serial.println(msg);
 }
 
 void loop() {
 
   chk = DHT11.read(DHT11PIN);
   l = analogRead(pinPhotoresistor);
+  t = 0;
+  h = 0;
+  m = 1;
   switch (chk)
   {
     case DHTLIB_OK: 
@@ -75,7 +78,7 @@ void loop() {
 		break;
     case DHTLIB_ERROR_CHECKSUM: 
 		m=99;
-                chk = DHT11.read(DHT11PIN);
+                //chk = DHT11.read(DHT11PIN);
 		break;
     case DHTLIB_ERROR_TIMEOUT: 
 		m=98; 
@@ -84,18 +87,18 @@ void loop() {
 		m=97;
 		break;
   }
-  sprintf(debug,"{\"l\":\"%i\",\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\"}",l,t,h,m);
-  Serial.println(debug);
-  delay(2000);
+  //sprintf(debug,"{\"l\":\"%i\",\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\"}",l,t,h,m);
+  //Serial.println(debug);
+  delay(1000);
 }
 
 void receiveData(int byteCount){
 
     while(Wire.available()) {
         dataReceived = Wire.read();
+        m = int(dataReceived);
     }
-
-      m = int(dataReceived);
+     
 
       if(m==11)
       {
@@ -119,14 +122,14 @@ void receiveData(int byteCount){
       }
 
      sprintf(msg,"{\"l\":\"%i\",\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\"}",l,t,h, m);
-     Serial.println(msg);
+     //Serial.println(msg);
 }
 
 void sendData(){
 
     Wire.write(msg[index]);
     ++index;
-    if (index >= 255) {
+    if (index >= 100) {
          index = 0;
     }
 }

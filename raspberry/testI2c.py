@@ -49,7 +49,7 @@ bus.write_byte(arduino_slave_address, to_send)
 # Waitng a bit for response
 time.sleep(1)
 
-for i in range(0, 255):
+for i in range(0, 100):
 	arduinomessage += chr(bus.read_byte(arduino_slave_address));
 
 print arduinomessage
