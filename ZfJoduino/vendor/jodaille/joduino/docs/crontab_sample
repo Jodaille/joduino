@@ -1,8 +1,13 @@
 #
 # Call ZfConsole "logenvironment" action every minute 
 # to log environment datas (T,H etc ...)
+#*/1 * * * * php /home/pi/joduino/ZfJoduino/public/index.php logenvironment
 
-*/1 * * * * php /home/pi/joduino/ZfJoduino/public/index.php logenvironment
+00 10  * * * php /home/pi/joduino/ZfJoduino/public/index.php fan on
+00 22 * * * php /home/pi/joduino/ZfJoduino/public/index.php fan off
+
+*/30  * * * * php /home/pi/joduino/ZfJoduino/public/index.php foam on
+*/5   * * * * php /home/pi/joduino/ZfJoduino/public/index.php foam off
 
 # send IP adress to URL (sometime it's hard to know adress without screen)
 #
