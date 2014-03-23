@@ -22,6 +22,7 @@ here user is www-data so we could add it as:
 
 ```bash
 adduser www-data i2c
+```
 
 Crontab configuration
 ---------------------
