@@ -1,20 +1,14 @@
 /*
- *
  * WebServerMultiPageHTMLProgmem sketch
- * cf: "Arduino cookbook" by Michael Margolis
- *
+ * 
  *
  * Respond to requests in the URL to change digital and analog output ports
  * show the number of ports changed and the value of the analog input pins.
  *
- * http://192.168.1.177/analog/   	displays analog pin data
- * http://192.168.1.177/digital/  	displays digital pin data
- * http://192.168.1.177/change/  	allows changing digital pin data
+ * http://192.168.1.177/analog/   displays analog pin data
+ * http://192.168.1.177/digital/  displays digital pin data
+ * http://192.168.1.177/change/  allows changing digital pin data
  *
- * added pages with function showJson for DHT11 :
- * http://192.168.1.177/json/  		get datas DHT11 and photoresistor
- * http://192.168.1.177/fanon/ 		switch on Fan
- * http://192.168.1.177/fanoff/		switch off Fan
  */
 
 #include <SPI.h>         // needed for Arduino versions later than 0018
@@ -32,7 +26,14 @@ char msg[100] = "{\"temperature\":\"\",\"humidity\":\"\",\"msg\":\"start\"}";
 
 #define DHT11PIN 2
 #define SLAVE_ADDRESS 0x12
-
+int dataReceived = 0;
+int index = 0;
+int t;
+int h;
+int l;
+int m;
+int chk;
+    
 #include <avr/pgmspace.h> // for progmem
 #define P(name)   static const prog_uchar name[] PROGMEM  // declare a static string
 
@@ -52,6 +53,10 @@ void setup()
   server.begin();
   delay(1000);
   Serial.println(F("Ready"));
+
+  Wire.begin(SLAVE_ADDRESS);
+  Wire.onReceive(receiveData);
+  Wire.onRequest(sendData);
 }
 
 void loop()
@@ -61,6 +66,7 @@ void loop()
   if (client) {
     int type = 0;
     while (client.connected()) {
+
       if (client.available()) {
         // GET, POST, or HEAD
         memset(buffer,0, sizeof(buffer)); // clear the buffer
@@ -103,16 +109,23 @@ void loop()
     // give the web browser time to receive the data
     delay(1);
     client.stop();
+  
+  }else {
+      chk = DHT11.read(DHT11PIN);
+  delay(1000);
+  l = analogRead(pinPhotoresistor);
+  t = int(DHT11.temperature);
+  h = int(DHT11.humidity);
+  sprintf(msg,"{\"l\":\"%i\",\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"\",\"action\":\"\"}",l,t,h);
+Serial.println(msg);
   }
 }
+
+
 void showJson(char * action)
 {
   Serial.println(action);
-    int t;
-    int h;
-    int l;
-    int m = pinFAN;
-    int chk;
+
     chk = DHT11.read(DHT11PIN);
     l = analogRead(pinPhotoresistor);
 
@@ -263,6 +276,50 @@ P(led_off) = "<img src=\"data:image/jpg;base64,"
 "H3dzt6cL/9k="
 "\"/>";
 ;
+void receiveData(int byteCount){
+
+    while(Wire.available()) {
+        dataReceived = Wire.read();
+    }
+       m = int(dataReceived);
+
+      if(m==11)
+      {
+        pinMode(pinFAN, OUTPUT);
+        digitalWrite(pinFAN, HIGH);
+
+        //m=15;
+      }
+      if(m==12)
+      {
+        pinMode(pinFAN, OUTPUT);
+        digitalWrite(pinFAN, LOW);
+        //m=15;
+      }
+      if(m==14)
+      {
+        pinMode(pinFOAM, OUTPUT);
+        digitalWrite(pinFOAM, HIGH);
+        //m=15;
+      }
+      if(m==15)
+      {
+        pinMode(pinFOAM, OUTPUT);
+        digitalWrite(pinFOAM, LOW);
+        //m=15;
+      }
+     //sprintf(msg,"{\"l\":\"%i\",\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\"}",l,t,h, m);
+     Serial.println("receiveData ");
+}
+
+void sendData(){
+
+    Wire.write(msg[index]);
+    ++index;
+    if (index >= 100) {
+         index = 0;
+    }
+}
 
 void showDigital()
 {
@@ -388,7 +445,7 @@ void sendJson(char *json)
 {
   // send a standard http response header
   client.println(F("HTTP/1.1 200 OK"));
-  client.println(F("Content-Type: text/json"));
+  client.println(F("Content-Type: application/json"));
   client.println();
   client.println(json);
 
