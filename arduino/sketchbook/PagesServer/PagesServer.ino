@@ -1,6 +1,5 @@
 /*
  * WebServerMultiPageHTMLProgmem sketch
- * 
  *
  * Respond to requests in the URL to change digital and analog output ports
  * show the number of ports changed and the value of the analog input pins.
@@ -14,26 +13,6 @@
 #include <SPI.h>         // needed for Arduino versions later than 0018
 #include <Ethernet.h>
 
-#include <Wire.h>
-#include <dht11.h>
-
-dht11 DHT11;
-int pinPhotoresistor = A0;
-const int pinFAN = 8;
-int pinFOAM = 7;
-
-char msg[100] = "{\"temperature\":\"\",\"humidity\":\"\",\"msg\":\"start\"}";
-
-#define DHT11PIN 2
-#define SLAVE_ADDRESS 0x12
-int dataReceived = 0;
-int index = 0;
-int t;
-int h;
-int l;
-int m;
-int chk;
-    
 #include <avr/pgmspace.h> // for progmem
 #define P(name)   static const prog_uchar name[] PROGMEM  // declare a static string
 
@@ -53,10 +32,6 @@ void setup()
   server.begin();
   delay(1000);
   Serial.println(F("Ready"));
-
-  Wire.begin(SLAVE_ADDRESS);
-  Wire.onReceive(receiveData);
-  Wire.onRequest(sendData);
 }
 
 void loop()
@@ -66,7 +41,6 @@ void loop()
   if (client) {
     int type = 0;
     while (client.connected()) {
-
       if (client.available()) {
         // GET, POST, or HEAD
         memset(buffer,0, sizeof(buffer)); // clear the buffer
@@ -85,20 +59,6 @@ void loop()
               showDigital();
             else if(strcmp(buffer, "change")== 0)
               showChange(type == 2);
-            else if(strcmp(buffer, "json")== 0)
-              showJson("json");
-            else if(strcmp(buffer, "fanon")== 0)
-              showJson("fanon");
-            else if(strcmp(buffer, "fanoff")== 0)
-              showJson("fanoff");
-            else if(strcmp(buffer, "foamon")== 0)
-              showJson("foamon");
-            else if(strcmp(buffer, "foamoff")== 0)
-              showJson("foamoff");
-            else if(strcmp(buffer, "alloff")== 0)
-              showJson("alloff");
-            else if(strcmp(buffer, "allon")== 0)
-              showJson("alloff");
             else
               unknownPage(buffer);
           }
@@ -109,129 +69,14 @@ void loop()
     // give the web browser time to receive the data
     delay(1);
     client.stop();
-  
-  }else {
-      chk = DHT11.read(DHT11PIN);
-  delay(1000);
-  l = analogRead(pinPhotoresistor);
-  t = int(DHT11.temperature);
-  h = int(DHT11.humidity);
-  sprintf(msg,"{\"l\":\"%i\",\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"\",\"action\":\"\"}",l,t,h);
-Serial.println(msg);
   }
 }
 
-
-void showJson(char * action)
-{
-  Serial.println(action);
-
-    chk = DHT11.read(DHT11PIN);
-    l = analogRead(pinPhotoresistor);
-
-if(strcasecmp(action, "fanon") == 0)
-{
-          pinMode(pinFAN, OUTPUT);
-          digitalWrite(pinFAN, HIGH);
-          action = "fanhigh";
-}
-else if(strcmp(buffer, "fanoff")== 0)
-{
-          pinMode(pinFAN, OUTPUT);
-          digitalWrite(pinFAN, LOW);
-          action = "fanlow";
-}
-else if(strcasecmp(action, "foamon") == 0)
-{
-          pinMode(pinFOAM, OUTPUT);
-          digitalWrite(pinFOAM, HIGH);
-          action = "foamhigh";
-}
-else if(strcmp(buffer, "foamoff")== 0)
-{
-          pinMode(pinFOAM, OUTPUT);
-          digitalWrite(pinFOAM, LOW);
-          action = "foamlow";
-}
-else if(strcmp(buffer, "alloff")== 0)
-{
-          pinMode(pinFOAM, OUTPUT);
-          digitalWrite(pinFOAM, LOW);
-          pinMode(pinFAN, OUTPUT);
-          digitalWrite(pinFAN, LOW);
-          action = "alloff";
-}
-else if(strcmp(buffer, "allon")== 0)
-{
-          pinMode(pinFOAM, OUTPUT);
-          digitalWrite(pinFOAM, HIGH);
-          pinMode(pinFAN, OUTPUT);
-          digitalWrite(pinFAN, HIGH);
-          action = "allon";
-}
-else
-{
-
-  action = "default";
-}
-          
-
-
-  switch (chk)
-  {
-    case DHTLIB_OK: 
-                t = int(DHT11.temperature);
-                h = int(DHT11.humidity);
-                m = 2;
-		break;
-    case DHTLIB_ERROR_CHECKSUM: 
-		m=99;
-                chk = DHT11.read(DHT11PIN);
-		break;
-    case DHTLIB_ERROR_TIMEOUT: 
-		m=98; 
-		break;
-    default: 
-		m=97;
-		break;
-  }    
-  sprintf(msg,"{\"l\":\"%i\",\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\",\"action\":\"%s\"}",l,t,h, m,action);
-  Serial.println(msg);
-  sendJson(msg);
-  //client.print(msg);
-}
 void showAnalog()
 {
-    int t;
-    int h;
-    int l;
-    int m = 1;
-    int chk;
-  
-  chk = DHT11.read(DHT11PIN);
-  l = analogRead(pinPhotoresistor);
-  switch (chk)
-  {
-    case DHTLIB_OK: 
-                t = int(DHT11.temperature);
-                h = int(DHT11.humidity);
-		break;
-    case DHTLIB_ERROR_CHECKSUM: 
-		m=99;
-                chk = DHT11.read(DHT11PIN);
-		break;
-    case DHTLIB_ERROR_TIMEOUT: 
-		m=98; 
-		break;
-    default: 
-		m=97;
-		break;
-  }
-  
   Serial.println(F("analog"));
-  sendHeader("Joduino ethernet show analog");
+  sendHeader("Multi-page example-Analog");
   client.println("<h1>Analog Pins</h1>");
-
   // output the value of each analog input pin
 
     client.println(F("<table border='1' >"));
@@ -276,55 +121,11 @@ P(led_off) = "<img src=\"data:image/jpg;base64,"
 "H3dzt6cL/9k="
 "\"/>";
 ;
-void receiveData(int byteCount){
-
-    while(Wire.available()) {
-        dataReceived = Wire.read();
-    }
-       m = int(dataReceived);
-
-      if(m==11)
-      {
-        pinMode(pinFAN, OUTPUT);
-        digitalWrite(pinFAN, HIGH);
-
-        //m=15;
-      }
-      if(m==12)
-      {
-        pinMode(pinFAN, OUTPUT);
-        digitalWrite(pinFAN, LOW);
-        //m=15;
-      }
-      if(m==14)
-      {
-        pinMode(pinFOAM, OUTPUT);
-        digitalWrite(pinFOAM, HIGH);
-        //m=15;
-      }
-      if(m==15)
-      {
-        pinMode(pinFOAM, OUTPUT);
-        digitalWrite(pinFOAM, LOW);
-        //m=15;
-      }
-     //sprintf(msg,"{\"l\":\"%i\",\"temperature\":\"%i\",\"humidity\":\"%i\",\"msg\":\"%i\"}",l,t,h, m);
-     Serial.println("receiveData ");
-}
-
-void sendData(){
-
-    Wire.write(msg[index]);
-    ++index;
-    if (index >= 100) {
-         index = 0;
-    }
-}
 
 void showDigital()
 {
   Serial.println(F("digital"));
-  sendHeader("Joduino ethernet show digital");
+  sendHeader("Multi-page example-Digital");
   client.println(F("<h2>Digital Pins</h2>"));
   // show the value of digital pins
   client.println(F("<table border='1'>"));
@@ -365,7 +166,7 @@ void showChange(boolean isPost)
       digitalWrite(pin, val);
     }
   }
-  sendHeader("Joduino ethernet");
+  sendHeader("Multi-page example-change");
   // table with buttons from 2 through 9
   // 2 to 5 are inputs, the other buttons are outputs
 
@@ -433,22 +234,11 @@ void unknownPage(char *page)
 {
   Serial.print(F("Unknown : "));
   Serial.println(F("page"));
-  Serial.println(page);
 
   sendHeader("Unknown Page");
   client.println(F("<h1>Unknown Page</h1>"));
   client.println(page);
   client.println(F("</body></html>"));
-}
-
-void sendJson(char *json)
-{
-  // send a standard http response header
-  client.println(F("HTTP/1.1 200 OK"));
-  client.println(F("Content-Type: application/json"));
-  client.println();
-  client.println(json);
-
 }
 
 void sendHeader(char *title)
@@ -460,10 +250,6 @@ void sendHeader(char *title)
   client.print(F("<html><head><title>"));
   client.println(title);
   client.println(F("</title><body>"));
-  client.println(F("<a href='/change/'>Change</a>"));
-  client.println(F("<a href='/analog/'>Analog</a>"));
-  client.println(F("<a href='/digital/'>Digital</a>"));
-  client.println(F("<a href='/json/'>Json view</a>"));
 }
 
 void printP(const prog_uchar *str)
@@ -487,4 +273,3 @@ void printP(const prog_uchar *str)
   if (bufferEnd > 1)
     client.write(buffer, bufferEnd - 1);
 }
-
