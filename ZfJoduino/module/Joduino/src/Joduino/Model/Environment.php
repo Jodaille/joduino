@@ -1,18 +1,12 @@
 <?php
-
-namespace Joduino\Model;
 /**
-CREATE TABLE  `joduino`.`environment` ( 
-        `id` INT NOT NULL AUTO_INCREMENT , 
-        `sensor_id` INT( 3 ) NULL , 
-        `humidity` INT( 3 ) NULL , 
-        `temperature` VARCHAR( 6 ) NULL , 
-        `photoresistance` INT( 4 ) NULL , 
-        `date` TIMESTAMP NOT NULL , 
-        PRIMARY KEY (  `id` ) ) 
-        ENGINE = INNODB;
-
-*/
+ * Joduino (https://github.com/Jodaille)
+ *
+ * @link      https://github.com/Jodaille/joduino for the canonical source repository
+ * @copyright Copyright (c) 2014 Jodaille (http://jodaille.org)
+ * @license   New BSD License
+ */
+namespace Joduino\Model;
 
 class Environment
 {

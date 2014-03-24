@@ -1,8 +1,14 @@
 <?php
 /**
-* ArduinoIcc.php
-*
+ * ArduinoIcc.php
+ *
+ * Joduino (https://github.com/Jodaille)
+ *
+ * @link      https://github.com/Jodaille/joduino for the canonical source repository
+ * @copyright Copyright (c) 2014 Jodaille (http://jodaille.org)
+ * @license   New BSD License
 */
+
 namespace Joduino\Model;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -102,6 +108,37 @@ class ArduinoIcc implements ServiceLocatorAwareInterface
     return $env;
   }
 
+  public function detect($address = 12)
+  {
+    $found = false;
+    $head = false;
+    $lines = array();
+    $cmd = "/usr/sbin/i2cdetect -y 1 ";
+    exec($cmd, $output,$cmdresult);
+    $iNb = count($output);
+    $iLoop = 0;
+    foreach($output as $o)
+    {
+      if($iLoop == 0)
+	      $head = $o;
+      else
+	      $lines[] = explode(' ', $o);
+      $iLoop++;
+    }
+    foreach($lines as $l)
+    {
+      if(in_array($address, $l))
+				$found = true;
+    }
+    $detect = array(
+		    'found' => $found,
+		    'status' => $cmdresult,
+		    'head' => $head,
+		    'lines' => $lines,
+		    );
+    return $detect;
+  }
+
   public function sendMsgToArduino($code, $decode = true)
   {
     $json = false;
@@ -127,16 +164,16 @@ class ArduinoIcc implements ServiceLocatorAwareInterface
 		    $error = ' - Profondeur maximale atteinte';
 	    break;
 	    case JSON_ERROR_STATE_MISMATCH:
-		    $error = ' - Inadéquation des modes ou underflow';
+		    $error = ' - Inadequation des modes ou underflow';
 	    break;
 	    case JSON_ERROR_CTRL_CHAR:
-		    $error = ' - Erreur lors du contrôle des caractères';
+		    $error = $brutJson;
 	    break;
 	    case JSON_ERROR_SYNTAX:
-		    $error = ' - Erreur de syntaxe ; JSON malformé';
+		    $error = ' - Erreur de syntaxe ; JSON malforme';
 	    break;
 	    case JSON_ERROR_UTF8:
-		    $error = ' - Caractères UTF-8 malformés, probablement une erreur d\'encodage';
+		    $error = ' - BAD UTF-8, probablement une erreur d\'encodage';
 	    break;
 
 	    default:

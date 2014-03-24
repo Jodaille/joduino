@@ -1,17 +1,17 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
+ * Joduino (https://github.com/Jodaille)
  *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @link      https://github.com/Jodaille/joduino for the canonical source repository
+ * @copyright Copyright (c) 2014 Jodaille (http://jodaille.org)
+ * @license   New BSD License
  */
 
 return array(
     'Joduino' => array(
 	'sendIDeuxCcmd' => 'python /home/pi/joduino/raspberry/testI2c.py',
 	'foam' => array(
-			'on' => '', 
+			'on' => '',
 			'off' => ''
 			),
 	'phpSettings'   => array(
@@ -30,6 +30,36 @@ return array(
                     'defaults' => array(
                         'controller' => 'Joduino\Controller\Index',
                         'action'     => 'index',
+                    ),
+                ),
+            ),
+              'detecthttp' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/detecthttp',
+                    'defaults' => array(
+                        'controller' => 'Joduino\Controller\Index',
+                        'action'     => 'detecthttp',
+                    ),
+                ),
+            ),
+             'detecti2c' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/detecti2c',
+                    'defaults' => array(
+                        'controller' => 'Joduino\Controller\Index',
+                        'action'     => 'detecti2c',
+                    ),
+                ),
+            ),
+             'histo' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/histo',
+                    'defaults' => array(
+                        'controller' => 'Joduino\Controller\Index',
+                        'action'     => 'histo',
                     ),
                 ),
             ),
@@ -100,6 +130,10 @@ return array(
         'template_map' => array(
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+            'joduino/index/histo' => __DIR__ . '/../view/joduino/index/histo.phtml',
+            'joduino/index/detecti2c' => __DIR__ . '/../view/joduino/index/detecti2c.phtml',
+            'joduino/index/detecthttp' => __DIR__ . '/../view/joduino/index/detecthttp.phtml',
+            'history'                => __DIR__ . '/../view/joduino/index/partial/history.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ),

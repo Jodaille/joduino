@@ -1,0 +1,34 @@
+<?php
+/**
+$detectInfos = array(
+		    'found' => $found,
+		    'status' => $cmdresult,
+		    'head' => $head,
+		    'lines' => $lines,
+		    );
+*/
+$actions[] = 'allon';
+$actions[] = 'alloff';
+
+$actions[] = 'fanon';
+$actions[] = 'fanoff';
+$actions[] = 'foamon';
+$actions[] = 'foamoff';
+
+if($page)
+{
+  echo $page;
+}
+else
+{
+  $found =  $this->translate('not found');
+  echo $found;
+}
+?>
+<ul class="nav">
+<?php foreach($actions as $a): ?>
+
+  <li class="active"><a href="/detecthttp?action=<?php echo $a ?>"><?php echo $this->translate($a) ?></a></li>
+<?php endforeach; ?>
+
+</ul>

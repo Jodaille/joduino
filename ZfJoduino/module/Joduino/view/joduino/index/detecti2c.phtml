@@ -1,0 +1,33 @@
+<?php
+/**
+$detectInfos = array(
+		    'found' => $found,
+		    'status' => $cmdresult,
+		    'head' => $head,
+		    'lines' => $lines,
+		    );
+*/
+if($detectInfos['found'])
+{
+  $found =  $this->translate('found');
+}
+else
+{
+  $found =  $this->translate('not found');
+}
+?>
+    <table name="lastDatas"  class="table table-striped">
+	    <caption><?php echo $this->translate('I2C detection') . ": $found" ?></caption>
+	    
+	    <!--tr><th>Temperature °C</th><th>bars</th><th>count</th></tr-->
+
+	    <?php foreach($detectInfos['lines'] as $key => $linerow): ?>
+	    <tr>
+	      <?php foreach($linerow as $row): ?>
+		    
+		      <?php echo '<td>' . $row . '</td>'; ?></td>
+	      <?php endforeach; ?> 
+	    </tr>
+	    <?php endforeach; ?>
+
+    </table>

@@ -1,0 +1,24 @@
+
+    <table name="lastDatas"  class="table table-striped">
+	    <caption><?php echo $this->translate('Temperatures scale') ?></caption>
+	    <tr><th>Temperature °C</th><th>bars</th><th>count</th></tr>
+
+	    <?php foreach($historyT as $temperature => $detail): ?>
+		    <tr>
+<?php echo '<td>' . $temperature . '</td><td>' . $detail['bar'] . '</td><td>' . $detail['count']; ?></td>
+		    </tr>
+	    <?php endforeach; ?>
+
+    </table>
+
+    <table name="lastDatas"  class="table table-striped">
+	    <caption><?php echo $this->translate('Humidity scale') ?></caption>
+	    <tr><th>Humidity %</th><th>bars</th><th>count</th></tr>
+
+	    <?php foreach($historyH as $humidity => $detail): ?>
+		    <tr>
+<?php echo '<td>' . $humidity . '</td><td>' . $detail['bar'] . '</td><td>' . $detail['count']; ?></td>
+		    </tr>
+	    <?php endforeach; ?>
+
+    </table>

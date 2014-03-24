@@ -1,4 +1,12 @@
 <?php
+/**
+ * Joduino (https://github.com/Jodaille)
+ *
+ * @link      https://github.com/Jodaille/joduino for the canonical source repository
+ * @copyright Copyright (c) 2014 Jodaille (http://jodaille.org)
+ * @license   New BSD License
+ */
+
 namespace Joduino\Model;
 
 use Zend\Db\TableGateway\TableGateway;
@@ -19,6 +27,33 @@ class EnvironmentTable extends AbstractTableGateway
     return $resultSet;
   }
 
+  public function getHistoBar($type = 'temperature')
+  {
+      $this->adapter = $this->tableGateway->getAdapter();
+
+      $sql = "SELECT $type,
+	      COUNT(*) AS COUNT,
+	      RPAD('', LN(COUNT(*)), '*') AS bar
+	      FROM
+	      environment
+	      WHERE $type IS NOT NULL
+	      GROUP BY $type";
+
+      $statement = $this->adapter->query($sql);
+      $historyResults = $statement->execute();
+      $history = array();
+
+      foreach($historyResults as $h)
+      {
+	if(!is_null($h[$type]))
+	  $history[$h[$type]] = array(
+					    'bar' => $h['bar'],
+					    'count' => $h['COUNT'],
+					    );
+      }
+      return $history;
+  }
+ 
   public function getHistory($nbelt = 20)
   {
     $resultSet = $this->tableGateway->select(
