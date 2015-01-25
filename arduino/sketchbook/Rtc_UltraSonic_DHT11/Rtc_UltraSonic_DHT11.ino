@@ -63,18 +63,6 @@ void loop() {
 
         int light = analogRead(lightPin);
 
-        digitalWrite(lowlevel, HIGH); // enable internal pull-up
-        if (digitalRead(lowlevel))
-        {
-            //Serial.println("!!! MISSING WATER !!!");
-            digitalWrite(warning, HIGH);
-        }
-        else
-        {
-            digitalWrite(warning, LOW);
-        }
-        digitalWrite(lowlevel, LOW); // disable internal pull-up
-
         // Sonar distance
         int uS = sonar.ping();
         
@@ -86,17 +74,17 @@ void loop() {
         
         // Display result
         Serial.print("{'date':'");
-        Serial.print(now.year(), DEC);
+        printDigits(now.year());
         Serial.print('-');
-        Serial.print(now.month(), DEC);
+        printDigits(now.month());
         Serial.print('-');
-        Serial.print(now.day(), DEC);
+        printDigits(now.day());
         Serial.print('T');
-        Serial.print(now.hour(), DEC);
+        printDigits(now.hour());
         Serial.print(':');
-        Serial.print(now.minute(), DEC);
+        printDigits(now.minute());
         Serial.print(':');
-        Serial.print(now.second(), DEC);
+        printDigits(now.second());
         Serial.print("',");
         Serial.print("'waterlevel':");
         Serial.print(uS / US_ROUNDTRIP_CM);
@@ -112,9 +100,31 @@ void loop() {
 
         Serial.print("'temperature':");
         Serial.print((float)DHT11.temperature, 2);
-        Serial.println("}");
-
         
+        // Low level alert 
+        Serial.print("'alarm':");
+        digitalWrite(lowlevel, HIGH); // enable internal pull-up
+        if (digitalRead(lowlevel))
+        {
+            //Serial.println("!!! MISSING WATER !!!");
+            Serial.print("'low water level'");
+            digitalWrite(warning, HIGH);
+        }
+        else
+        {
+            Serial.print("''");
+            digitalWrite(warning, LOW);
+        }
+        digitalWrite(lowlevel, LOW); // disable internal pull-up
+
+        Serial.println("}");        
         
     }
+}
+
+void printDigits(byte digits){
+  // utility function for digital clock display: prints colon and leading 0
+  if(digits < 10)
+    Serial.print('0');
+  Serial.print(digits,DEC);   
 }
