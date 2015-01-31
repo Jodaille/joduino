@@ -1,16 +1,28 @@
-/* Clock
+/**
+* Environment monitor:
+* - DHT11 for humidity/temperature
+* - Photoresistor for light level
+* - Ultrasonic sensor to measure water level in tank
+* - two stainless steel nails for a simple low water level
+* - Tiny RTC to log date and time
+* @author: Jodaille
+* @link: https://github.com/Jodaille/joduino/tree/master/arduino/sketchbook/Rtc_UltraSonic_DHT11
+*/
+
+/*
+* RTC Clock
 * cf:
 * https://learn.adafruit.com/ds1307-real-time-clock-breakout-board-kit/understanding-the-code
 */
 #include <Wire.h>
-#include "RTClib.h" 
+#include "RTClib.h"
 RTC_DS1307 RTC;
 
 // Ultrasonic sensor
 #include <NewPing.h>
 #define TRIGGER_PIN  12
 #define ECHO_PIN     11
-#define MAX_DISTANCE 200 
+#define MAX_DISTANCE 200
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 // DHT11 sensor
@@ -33,7 +45,7 @@ long previousMillis = 0;        // will store last time data was updated
 
 // the follow variables is a long because the time, measured in miliseconds,
 // will quickly become a bigger number than can be stored in an int.
-long interval = 1000;           // interval at which to blink (milliseconds)
+long interval = 60000;           // interval at which to process (milliseconds)
 
 void setup() {
 
@@ -49,32 +61,32 @@ void setup() {
     }
 
     // low water level
-    pinMode(lowlevel, INPUT); 
-    
+    pinMode(lowlevel, INPUT);
+
 }
- 
+
 void loop() {
 
     unsigned long currentMillis = millis();
- 
+
     if(currentMillis - previousMillis > interval) {
-        // save the last time we read data 
+        // save the last time we read data
         previousMillis = currentMillis;
 
         int light = analogRead(lightPin);
 
         // Sonar distance
         int uS = sonar.ping();
-        
+
         // Time
         DateTime now = RTC.now();
-        
+
         // Temperature and humidity
         int chk = DHT11.read(DHT11PIN);
-        
+
         // Display result
         Serial.print("{'date':'");
-        printDigits(now.year());
+        Serial.print(now.year(),DEC);
         Serial.print('-');
         printDigits(now.month());
         Serial.print('-');
@@ -100,8 +112,8 @@ void loop() {
 
         Serial.print("'temperature':");
         Serial.print((float)DHT11.temperature, 2);
-        
-        // Low level alert 
+
+        // Low level alert
         Serial.print("'alarm':");
         digitalWrite(lowlevel, HIGH); // enable internal pull-up
         if (digitalRead(lowlevel))
@@ -117,8 +129,8 @@ void loop() {
         }
         digitalWrite(lowlevel, LOW); // disable internal pull-up
 
-        Serial.println("}");        
-        
+        Serial.println("}");
+
     }
 }
 
@@ -126,5 +138,5 @@ void printDigits(byte digits){
   // utility function for digital clock display: prints colon and leading 0
   if(digits < 10)
     Serial.print('0');
-  Serial.print(digits,DEC);   
+  Serial.print(digits,DEC);
 }
