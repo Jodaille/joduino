@@ -85,7 +85,7 @@ void loop() {
         int chk = DHT11.read(DHT11PIN);
 
         // Display result
-        Serial.print("{'date':'");
+        Serial.print("{\"date\":\"");
         Serial.print(now.year(),DEC);
         Serial.print('-');
         printDigits(now.month());
@@ -97,34 +97,35 @@ void loop() {
         printDigits(now.minute());
         Serial.print(':');
         printDigits(now.second());
-        Serial.print("',");
-        Serial.print("'waterlevel':");
+        Serial.print("\",");
+        Serial.print("\"waterlevel\":");
         Serial.print(uS / US_ROUNDTRIP_CM);
         Serial.print(",");
 
-        Serial.print("'light':");
+        Serial.print("\"light\":");
         Serial.print(light);
         Serial.print(",");
 
-        Serial.print("'humidity':'");
+        Serial.print("\"humidity\":\"");
         Serial.print((float)DHT11.humidity, 2);
-        Serial.print("',");
+        Serial.print("\",");
 
-        Serial.print("'temperature':");
+        Serial.print("\"temperature\":\"");
         Serial.print((float)DHT11.temperature, 2);
+        Serial.print("\",");
 
         // Low level alert
-        Serial.print("'alarm':");
+        Serial.print("\"alarm\":");
         digitalWrite(lowlevel, HIGH); // enable internal pull-up
         if (digitalRead(lowlevel))
         {
             //Serial.println("!!! MISSING WATER !!!");
-            Serial.print("'low water level'");
+            Serial.print("\"low water level\"");
             digitalWrite(warning, HIGH);
         }
         else
         {
-            Serial.print("''");
+            Serial.print("\"\"");
             digitalWrite(warning, LOW);
         }
         digitalWrite(lowlevel, LOW); // disable internal pull-up
