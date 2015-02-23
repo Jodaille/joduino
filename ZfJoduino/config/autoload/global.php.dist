@@ -1,0 +1,14 @@
+<?php
+return array(
+   'db' => array(
+      'driver'         => 'Pdo',
+      'dsn'            => 'mysql:dbname=joduino;host=localhost',
+      'username'       => 'joduinouser',
+      'password'       => 'joduinopassword',
+   ),
+   'service_manager' => array(
+      'factories' => array(
+         'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
+      ),
+   ),
+);

@@ -1,0 +1,6 @@
+vendor
+config/autoload/*.php
+*.directory
+*~
+composer.lock
+module/Application/language
