@@ -1,4 +1,5 @@
 vendor
+!vendor/jodaille
 config/autoload/*.php
 *.directory
 *~
