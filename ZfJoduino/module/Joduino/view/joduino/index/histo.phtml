@@ -1,24 +1,49 @@
 
-    <table name="lastDatas"  class="table table-striped">
-	    <caption><?php echo $this->translate('Temperatures scale') ?></caption>
-	    <tr><th>Temperature °C</th><th>bars</th><th>count</th></tr>
+<table name="lastDatasT"  class="table table-striped">
+  <caption><?php echo $this->translate('Temperatures scale') ?></caption>
+  <tr><th>Temperature °C</th><th>bars</th><th>count</th></tr>
 
-	    <?php foreach($historyT as $temperature => $detail): ?>
-		    <tr>
-<?php echo '<td>' . $temperature . '</td><td>' . $detail['bar'] . '</td><td>' . $detail['count']; ?></td>
-		    </tr>
-	    <?php endforeach; ?>
+  <?php foreach($historyT as $temperature => $detail): ?>
+    <tr>
+      <?php echo '<td>' . $temperature . '</td><td>' . $detail['bar'] . '</td><td>' . $detail['count']; ?></td>
+    </tr>
+  <?php endforeach; ?>
 
-    </table>
+</table>
 
-    <table name="lastDatas"  class="table table-striped">
-	    <caption><?php echo $this->translate('Humidity scale') ?></caption>
-	    <tr><th>Humidity %</th><th>bars</th><th>count</th></tr>
+<table name="lastDatasH"  class="table table-striped">
+  <caption><?php echo $this->translate('Humidity scale') ?></caption>
+  <tr><th>Humidity %</th><th>bars</th><th>count</th></tr>
 
-	    <?php foreach($historyH as $humidity => $detail): ?>
-		    <tr>
-<?php echo '<td>' . $humidity . '</td><td>' . $detail['bar'] . '</td><td>' . $detail['count']; ?></td>
-		    </tr>
-	    <?php endforeach; ?>
+  <?php foreach($historyH as $humidity => $detail): ?>
+    <tr>
+      <?php echo '<td>' . $humidity . '</td><td>' . $detail['bar'] . '</td><td>' . $detail['count']; ?></td>
+    </tr>
+  <?php endforeach; ?>
 
-    </table>
+</table>
+
+<table name="lastDatasW"  class="table table-striped">
+  <caption><?php echo $this->translate('Waterlevel scale') ?></caption>
+  <tr><th>Level</th><th>bars</th><th>count</th></tr>
+
+  <?php foreach($historyW as $level => $detail): ?>
+    <tr>
+      <?php echo '<td>' . $level . '</td><td>' . $detail['bar'] . '</td><td>' . $detail['count']; ?></td>
+    </tr>
+  <?php endforeach; ?>
+
+</table>
+
+
+<table name="lastDatasL"  class="table table-striped">
+  <caption><?php echo $this->translate('Light scale') ?></caption>
+  <tr><th>Level</th><th>bars</th><th>count</th></tr>
+
+  <?php foreach($historyL as $light => $detail): ?>
+    <tr>
+      <?php echo '<td>' . $light . '</td><td>' . $detail['bar'] . '</td><td>' . $detail['count']; ?></td>
+    </tr>
+  <?php endforeach; ?>
+
+</table>

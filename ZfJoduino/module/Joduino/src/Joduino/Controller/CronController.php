@@ -1,16 +1,21 @@
 <?php
 /**
- * Joduino (https://github.com/Jodaille)
- *
- * @link      https://github.com/Jodaille/joduino for the canonical source repository
- * @copyright Copyright (c) 2014 Jodaille (http://jodaille.org)
- * @license   New BSD License
- */
+* Joduino (https://github.com/Jodaille)
+*
+* @link      https://github.com/Jodaille/joduino for the canonical source repository
+* @copyright Copyright (c) 2014 Jodaille (http://jodaille.org)
+* @license   New BSD License
+*/
 
 namespace Joduino\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+
 use Zend\Console\Request as ConsoleRequest;
+use Zend\Console\Prompt;
+use Zend\Console\Prompt\Line;
+use Zend\Console\Prompt\Select;
+use Zend\Console\ColorInterface;
 
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
@@ -18,6 +23,25 @@ use Zend\View\Model\JsonModel;
 class CronController extends AbstractActionController
 {
   protected $environmentTable;
+
+  public function loadJsonLogAction()
+  {
+    $request = $this->getRequest();
+    if (!$request instanceof ConsoleRequest){
+      throw new \RuntimeException('You can only use this action from a console!');
+    }
+
+    $verbose    = $request->getParam('verbose', false);
+    $filepath   = $request->getParam('filepath');
+    $sensor_id   = $request->getParam('sensor_id', 1);
+
+
+
+    $arduinoJsonLog = $this->getServiceLocator()->get('Joduino\Model\ArduinoJsonLog');
+
+    $arduinoJsonLog->importFile($filepath, $sensor_id);
+
+  }
 
   public function indexAction()
   {
@@ -51,7 +75,7 @@ class CronController extends AbstractActionController
     $request = $this->getRequest();
 
     if (!$request instanceof ConsoleRequest){
-	throw new \RuntimeException('You can only use this action from a console!');
+      throw new \RuntimeException('You can only use this action from a console!');
     }
 
     $verbose     = $request->getParam('verbose', false);
@@ -68,7 +92,7 @@ class CronController extends AbstractActionController
     $request = $this->getRequest();
 
     if (!$request instanceof ConsoleRequest){
-	throw new \RuntimeException('You can only use this action from a console!');
+      throw new \RuntimeException('You can only use this action from a console!');
     }
     $verbose     = $request->getParam('verbose', false);
     $state   = $request->getParam('state');

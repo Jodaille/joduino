@@ -9,7 +9,7 @@
 
 return array(
   'Joduino' => array(
-    'sendIDeuxCcmd' => 'python /home/pi/joduino/raspberry/testI2c.py',
+    'sendIDeuxCcmd' => 'python /home/jody/joduino/raspberry/testI2c.py',
     'foam' => array(
       'on' => '',
       'off' => ''
@@ -164,6 +164,15 @@ return array(
             'defaults' => array(
               'controller' => 'Joduino\Controller\Cron',
               'action' => 'fan',
+            )
+          )
+        ),
+        'loadJsonLog' => array(
+          'options' => array(
+            'route' => 'load_json_log [--verbose|-v] <filepath>',
+            'defaults' => array(
+              'controller' => 'Joduino\Controller\Cron',
+              'action' => 'loadJsonLog',
             )
           )
         ),

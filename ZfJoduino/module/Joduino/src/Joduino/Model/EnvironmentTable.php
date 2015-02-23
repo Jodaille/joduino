@@ -92,6 +92,7 @@ class EnvironmentTable extends AbstractTableGateway
       'humidity' => $environment->humidity,
       'temperature' => $environment->temperature,
       'photoresistance' => $environment->photoresistance,
+      'waterlevel' => $environment->waterlevel,
       'msgsent' => $environment->msgsent,
       'msgrcved' => $environment->msgrcved,
       'msgdate' => $environment->msgdate,
