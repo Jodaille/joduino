@@ -1,11 +1,11 @@
 <?php
 /**
- * Joduino (https://github.com/Jodaille)
- *
- * @link      https://github.com/Jodaille/joduino for the canonical source repository
- * @copyright Copyright (c) 2014 Jodaille (http://jodaille.org)
- * @license   New BSD License
- */
+* Joduino (https://github.com/Jodaille)
+*
+* @link      https://github.com/Jodaille/joduino for the canonical source repository
+* @copyright Copyright (c) 2014 Jodaille (http://jodaille.org)
+* @license   New BSD License
+*/
 namespace Joduino\Model;
 
 class Environment
@@ -22,7 +22,7 @@ class Environment
   public function __construct($sensor_id = false)
   {
     if($sensor_id)
-	    $this->sensor_id = $sensor_id;
+    $this->sensor_id = $sensor_id;
   }
 
   public function exchangeArray($data)

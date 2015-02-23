@@ -6,7 +6,7 @@
         "joduino",
         "zf2",
         "arduino",
-        "I2C",
+        "I2C"
     ],
     "homepage": "https://github.com/Jodaille/joduino",
     "require": {
