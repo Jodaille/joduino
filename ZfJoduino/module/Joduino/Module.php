@@ -45,26 +45,15 @@ class Module
 
     public function getServiceConfig()
     {
-        return array(
-            'factories' => array(
-                'Joduino\Model\ArduinoIcc' => function ($sm) {
-                    $ArduinoIcc = new \Joduino\Model\ArduinoIcc($sm);
-                    $ArduinoIcc->setServiceLocator($sm);
-                    return $ArduinoIcc;
-                },
-                 'Joduino\Model\EnvironmentTable' =>  function($sm) {
-                     $tableGateway = $sm->get('EnvironmentTableGateway');
-                     $table = new EnvironmentTable($tableGateway);
-                     return $table;
-                 },
-                 'EnvironmentTableGateway' => function ($sm) {
-                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                     $resultSetPrototype = new ResultSet();
-                     $resultSetPrototype->setArrayObjectPrototype(new Environment());
-                     return new TableGateway('environment', $dbAdapter, null, $resultSetPrototype);
-                 },
-            ),
-        );
+      return array(
+          'factories' => array(
+            'Joduino\Model\ArduinoIcc' => 'Joduino\Factory\ArduinoIccFactory',
+            'Joduino\Model\ArduinoJsonLog' => 'Joduino\Factory\ArduinoJsonLogFactory',
+
+            'Joduino\Model\EnvironmentTable' =>  'Joduino\Factory\EnvironmentTableFactory',
+            'EnvironmentTableGateway' => 'Joduino\Factory\EnvironmentTableGwFactory',
+          ),
+      );
     }
 
     public function getConfig()
