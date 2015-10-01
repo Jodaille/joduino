@@ -16,6 +16,25 @@ Environment monitor:
 (Arduino ethernet)
 - [x] standalone webserver version
 
+# Standalone (nearly) version
+usage of: Jodaille/joduino/tree/master/arduino/sketchbook/Rtc_UltraSonic_DHT11
+
+Arduino + eeepc
+
+Configure GNU screen to log everythings, in your ~/.screenrc
+
+```config
+deflog on
+logfile /home/jody/screenlog.%n
+```
+
+```bash
+# open connection to Arduino with screen
+screen /dev/ttyUSB0 9600
+```
+
+
+
 # Why I2C communication
 
 - Arduino without ethernet could communicate

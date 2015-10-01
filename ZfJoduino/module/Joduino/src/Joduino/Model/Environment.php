@@ -1,11 +1,11 @@
 <?php
 /**
- * Joduino (https://github.com/Jodaille)
- *
- * @link      https://github.com/Jodaille/joduino for the canonical source repository
- * @copyright Copyright (c) 2014 Jodaille (http://jodaille.org)
- * @license   New BSD License
- */
+* Joduino (https://github.com/Jodaille)
+*
+* @link      https://github.com/Jodaille/joduino for the canonical source repository
+* @copyright Copyright (c) 2014 Jodaille (http://jodaille.org)
+* @license   New BSD License
+*/
 namespace Joduino\Model;
 
 class Environment
@@ -22,7 +22,7 @@ class Environment
   public function __construct($sensor_id = false)
   {
     if($sensor_id)
-	    $this->sensor_id = $sensor_id;
+    $this->sensor_id = $sensor_id;
   }
 
   public function exchangeArray($data)
@@ -32,6 +32,8 @@ class Environment
     $this->humidity     	= (!empty($data['humidity'])) ? $data['humidity'] : null;
     $this->temperature 	= (!empty($data['temperature'])) ? $data['temperature'] : null;
     $this->photoresistance 	= (!empty($data['photoresistance'])) ? $data['photoresistance'] : null;
+    $this->waterlevel 		= (!empty($data['waterlevel'])) ? $data['waterlevel'] : null;
+
     $this->msgsent 		= (!empty($data['msgsent'])) ? $data['msgsent'] : null;
     $this->msgrcved 	= (!empty($data['msgrcved'])) ? $data['msgrcved'] : null;
     $this->msgdate 		= (!empty($data['msgdate'])) ? $data['msgdate'] : null;
@@ -43,10 +45,11 @@ class Environment
     $this->sensor_id     	= $this->sensor_id;
     $this->humidity     	= (!empty($oJsonDecode->humidity)) ? $oJsonDecode->humidity : null;;
     $this->temperature 		= (!empty($oJsonDecode->temperature)) ? $oJsonDecode->temperature : null;
-    $this->photoresistance 	= (!empty($oJsonDecode->l)) ? $oJsonDecode->l : null;
+    $this->photoresistance = (!empty($oJsonDecode->light)) ? $oJsonDecode->light : null;
+    $this->waterlevel = (!empty($oJsonDecode->waterlevel)) ? $oJsonDecode->waterlevel : null;
     $this->msgsent	 	= (!empty($oJsonDecode->msgsent)) ? $oJsonDecode->msgsent : null;
-    $this->msgrcved	 	= (!empty($oJsonDecode->msgrcved)) ? $oJsonDecode->msgrcved : null;
-    $this->msgdate 		= $this->_getDate();
+    $this->msgrcved	 	= (!empty($oJsonDecode->alarm)) ? $oJsonDecode->alarm : null;
+    $this->msgdate 		= (!empty($oJsonDecode->date)) ? $oJsonDecode->date : $this->_getDate();
   }
 
   public function setMsgReceived($msg)
