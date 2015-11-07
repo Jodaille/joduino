@@ -1,11 +1,17 @@
 /**
-* JoBee monitor
-* records temperature and log it on sdCard
+* JoBee beehive monitor
+*
+* records time and temperature on sdCard
+*
 * time from RTclock
 * temperature with DS18B20
+*
+* @compiler: Jodaille
+*
+* this is free software
 */
 
-/** 
+/**
 * Wire is needed for clock
 */
 #include <Wire.h>
@@ -27,7 +33,7 @@ RTC_DS1307 RTC;
  to an SD card using the SD library.
 
  The circuit:
- * analog sensors on analog ins 0, 1, and 2
+ * DS18B20 digital sensors on digital 2
  * SD card attached to SPI bus as follows:
  ** MOSI - pin 11
  ** MISO - pin 12
@@ -45,7 +51,7 @@ RTC_DS1307 RTC;
 
 /**
 * DallasTemperature
-* DS18B20 
+* DS18B20
 * https://github.com/milesburton/Arduino-Temperature-Control-Library
 */
 #include <DallasTemperature.h>
@@ -60,7 +66,7 @@ const int chipSelect = 4;
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(ONE_WIRE_BUS);
 
-// Pass our oneWire reference to Dallas Temperature. 
+// Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
 
 /**
@@ -124,7 +130,7 @@ void loop() {
         dataString += ",";
       }
     }
-  
+
 
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
