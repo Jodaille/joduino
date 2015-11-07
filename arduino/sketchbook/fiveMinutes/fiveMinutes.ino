@@ -1,24 +1,44 @@
 
+/** 
+* Wire is need for clock
+* you will find RTClib at :
+* https://github.com/adafruit/RTClib
+*/
 #include <Wire.h>
 #include "RTClib.h"
-#include <dht11.h>
-
-dht11 DHT11;
 RTC_DS1307 RTC;
 
+/**
+* Libraries for DHT11
+*/
+#include <dht11.h>
+dht11 DHT11;
 #define DHT11PIN 2
+
+/**
+* Photoresistor pin
+*/
 #define PHOTORPIN 3
-#define FIVEMIN (1000UL * 60 * 5);
+
+/**
+* One measure every five minutes
+*/
+//#define FIVEMIN (1000UL * 60 * 5);
+#define FIVEMIN (1000UL * 5);
 unsigned long rolltime = millis() + FIVEMIN;
 
 char msg[255] = "some_text_without_space";
 
 void setup() {
   // put your setup code here, to run once:
+
   //Initialize the serial port, wire library and RTC module
     Serial.begin(9600);
     Wire.begin();
     RTC.begin();
+    
+    // Uncomment to adjust time with computer
+    //RTC.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
 
 void loop() {
