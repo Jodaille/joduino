@@ -79,7 +79,16 @@ DallasTemperature sensors(&oneWire);
 //#define FIVEMIN (1000UL * 5);
 unsigned long rolltime = millis() + FIVEMIN;
 
+#define STATUS_LED 8
+
 void setup() {
+  pinMode(STATUS_LED, OUTPUT);
+  digitalWrite(STATUS_LED, HIGH);
+  delay(1000); 
+  digitalWrite(STATUS_LED, LOW);
+  delay(1000);
+  digitalWrite(STATUS_LED, HIGH);
+
   // Open serial communications and wait for port to open:
   Serial.begin(9600);
   /*while (!Serial) {
@@ -89,7 +98,10 @@ void setup() {
     Serial.begin(9600);
     Wire.begin();
     RTC.begin();
-
+    // Adjust time
+    //RTC.adjust(DateTime(F(__DATE__), F(__TIME__)));
+    
+  digitalWrite(STATUS_LED, LOW);
   Serial.print("Initializing SD card...");
 
   // see if the card is present and can be initialized:
@@ -99,12 +111,25 @@ void setup() {
     return;
   }
   Serial.println("card initialized.");
+  digitalWrite(STATUS_LED, HIGH);
+  delay(500);
+  digitalWrite(STATUS_LED, LOW);
+  delay(500);
+  digitalWrite(STATUS_LED, HIGH);
+  delay(500);
+  digitalWrite(STATUS_LED, LOW);
+  delay(500);
+  digitalWrite(STATUS_LED, HIGH);
+  delay(500);
+  digitalWrite(STATUS_LED, LOW);
+  delay(500);
   // Start up the library
   sensors.begin(); // IC Default 9 bit. If you have troubles consider upping it 12. Ups the delay giving the IC more time to process the temperature measurement
 }
 
 void loop() {
   if((long)(millis() - rolltime) >= 0) {
+    digitalWrite(STATUS_LED, HIGH);
     // make a string for assembling the data to log:
     DateTime now = RTC.now();
     String dataString = "";
@@ -148,5 +173,6 @@ void loop() {
     Serial.println("error opening datalog.txt");
   }
   rolltime += FIVEMIN;
-  }
+  digitalWrite(STATUS_LED, LOW);
+ }
 }
